@@ -93,3 +93,34 @@ button:hover{
 button:active{
   transform: translateY(2px) scale(.9);
 }
+
+input{
+  width: calc(100% - 100px);
+  border: none;
+  border-bottom: 2px solid rebeccapurple;
+}
+input:focus{
+  width: calc(100% - 100px);
+  border: none;
+  outline: none;
+  border-bottom: 2px solid rebeccapurple;
+}
+
+span{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2px auto;
+}
+
+span textarea{
+  width: calc(100% - 100px);
+  border: 2px solid rebeccapurple;
+  border-radius: 4px;
+}
+
+span p{
+  width: 100px;
+}

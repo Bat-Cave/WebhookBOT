@@ -40,9 +40,9 @@ export default class Home extends Component {
             ],
             channel: 'https://discordapp.com/api/webhooks/743557795369975848/hGsqPK2kSR6vK8ZXmDxEek5zOjOtcNWdJMEa_NSKg0MBJVBtKbwhFD_bn_aj4HEGF-Hz',
             channels: {
+                clientSuccess: 'https://discordapp.com/api/webhooks/743557811463651440/kVSxoxW9vAYJCyM8tfkUTlJRzbnjUAhHcoTNVuQ_ef23sc5hwImShXFr7VDiDna5vgLS',
                 testGeneral: 'https://discordapp.com/api/webhooks/743557795369975848/hGsqPK2kSR6vK8ZXmDxEek5zOjOtcNWdJMEa_NSKg0MBJVBtKbwhFD_bn_aj4HEGF-Hz',
                 testOne: 'https://discordapp.com/api/webhooks/743596002337882264/bwIyUtAKFKYm5-VbiVyZje3UWAIV0aegV_G5nHGaQuCTE668RXtT_-q6YkKioOScpb_I',
-                clientSuccess: 'https://discordapp.com/api/webhooks/743557811463651440/kVSxoxW9vAYJCyM8tfkUTlJRzbnjUAhHcoTNVuQ_ef23sc5hwImShXFr7VDiDna5vgLS',
             }
         }
     }
@@ -52,7 +52,6 @@ export default class Home extends Component {
     generateEmbedMessage = (workout) => {
         this.state.workouts.forEach((e, i) => {
             if(e.name === workout){
-                console.log(e.image)
                 let embed = {
                     author: {
                       name: "10/10/10"
@@ -152,16 +151,35 @@ export default class Home extends Component {
                             {workoutOptions}
                         </select>
                     </p>
-                    <textarea id="message" name="message" rows="4" cols="50" placeholder="Message..." onChange={(e) => this.handleInput('message', e.target.value)}></textarea>
                 </div>
-                <div className='row'>
-                    <p>Send Now:</p>
-                    <button onClick={()=> this.sendMessage()}>Send</button>
-                </div>
-                <div className="row">
-                    <p>Send Every Hour on the Dot: </p>
-                    <button className="green" onClick={()=> this.startInterval()} >Start Interval</button>
-                    <button className="red" onClick={()=> this.stopInterval()} >Stop Interval</button>
+                <div className='column'>
+                    {/* <h4>Embed Message</h4>
+                    <span>
+                        <p>Author Name:</p>
+                        <input placeholder='Author Name...' />
+                    </span>
+                    <span>
+                        <p>Description:</p>
+                        <textarea rows="4" cols="50" placeholder="Description..."></textarea>
+                    </span>
+                    <span>
+                        <p>Image URL:</p>
+                        <input placeholder='Image URL...' />
+                    </span>
+                    <span>
+                        <p>Color:</p>
+                        <input placeholder='Color...' />
+                    </span>
+                    <textarea id="message" name="message" rows="4" cols="50" placeholder="Message..." onChange={(e) => this.handleInput('message', e.target.value)}></textarea> */}
+                    <span>
+                        <p>Send Now:</p>
+                        <button onClick={()=> this.sendMessage()}>Send</button>
+                    </span>
+                    <span>
+                        <p>Send Every Hour: </p>
+                        <button className="green" onClick={()=> this.startInterval()} >Start Interval</button>
+                        <button className="red" onClick={()=> this.stopInterval()} >Stop Interval</button>
+                    </span>
                 </div>
             </div>
         )
