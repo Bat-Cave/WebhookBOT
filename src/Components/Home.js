@@ -38,12 +38,24 @@ export default class Home extends Component {
                     image: 'https://i.ibb.co/vjbWGfC/Curl-Twist-Raise.png'
                 }
             ],
-            channel: 'https://discordapp.com/api/webhooks/743557795369975848/hGsqPK2kSR6vK8ZXmDxEek5zOjOtcNWdJMEa_NSKg0MBJVBtKbwhFD_bn_aj4HEGF-Hz',
+            channel: 'https://discordapp.com/api/webhooks/743557811463651440/kVSxoxW9vAYJCyM8tfkUTlJRzbnjUAhHcoTNVuQ_ef23sc5hwImShXFr7VDiDna5vgLS',
             channels: {
-                clientSuccess: 'https://discordapp.com/api/webhooks/743557811463651440/kVSxoxW9vAYJCyM8tfkUTlJRzbnjUAhHcoTNVuQ_ef23sc5hwImShXFr7VDiDna5vgLS',
-                testGeneral: 'https://discordapp.com/api/webhooks/743557795369975848/hGsqPK2kSR6vK8ZXmDxEek5zOjOtcNWdJMEa_NSKg0MBJVBtKbwhFD_bn_aj4HEGF-Hz',
-                testOne: 'https://discordapp.com/api/webhooks/743596002337882264/bwIyUtAKFKYm5-VbiVyZje3UWAIV0aegV_G5nHGaQuCTE668RXtT_-q6YkKioOScpb_I',
-            }
+                clientSuccess: {
+                    link: 'https://discordapp.com/api/webhooks/743557811463651440/kVSxoxW9vAYJCyM8tfkUTlJRzbnjUAhHcoTNVuQ_ef23sc5hwImShXFr7VDiDna5vgLS',
+                    inUse : true,
+                },
+                testGeneral: {
+                    link: 'https://discordapp.com/api/webhooks/743557795369975848/hGsqPK2kSR6vK8ZXmDxEek5zOjOtcNWdJMEa_NSKg0MBJVBtKbwhFD_bn_aj4HEGF-Hz',
+                    inUse : false,
+                },
+                testOne: {
+                    link : 'https://discordapp.com/api/webhooks/743596002337882264/bwIyUtAKFKYm5-VbiVyZje3UWAIV0aegV_G5nHGaQuCTE668RXtT_-q6YkKioOScpb_I',
+                    inUse : false
+                }
+            },
+            started: false,
+            sendingIn: '',
+            instructionMessage: 'Click "Start Bot" to send the workout reminder every hour.',
         }
     }
     handleInput = (name, val) => {
@@ -100,32 +112,63 @@ export default class Home extends Component {
     }
 
     startInterval = () => {
+        this.setState({started: true})
         this.setState({int: setInterval(()=>{
             let date = new Date();
             let m = +date.getMinutes();
             if(m === 0){
                 this.sendMessage();
             }
-            console.log(m)
+            setTimeout(() => {
+                this.setState({sendingIn: (60 - m)})
+                console.log(m)
+            }, 500)
+            this.setState({instructionMessage: 'Bot Started!'})
         }, 60000)})
         console.log(this.state.int)
     }
     stopInterval = () => {
+        this.setState({instructionMessage: 'Bot Stopped.'})
+        this.setState({started: false})
         clearInterval(this.state.int)
+        setTimeout(() => {
+            this.setState({instructionMessage: 'Click "Start Bot" to send the workout reminder every hour.'})
+        }, 3000)
         console.log(this.state.int)
     }
 
 
     render(){
         let chan = Object.keys(this.state.channels).map((e, i)=>{
-            return(
-                <option key={i} value={e}>{e}</option>
-            )
+            if(this.state.channels[e].inUse){
+                return(
+                    <option key={i} value={e}>{e}</option>
+                )
+            } else {
+                return(
+                    null
+                )
+            }
         });
         let workoutOptions = this.state.workouts.map((e, i) =>{
             return(
                 <option key={i} value={e.name}>{e.name}</option>
             )
+        })
+        let workoutDetails = this.state.workouts.map((e, i) => {
+            if(e.name === this.state.workout){
+                return(
+                    <div key={i}>
+                        <p>{e.items[0].name}</p>
+                        <p>{e.items[1].name}</p>
+                        <p>{e.items[2].name}</p>
+                    </div>
+                )
+            } else {
+                return(
+                    null
+                )
+            }
         })
         return(
             <div className="container">
@@ -137,7 +180,7 @@ export default class Home extends Component {
                     <h4>Create Message</h4>
                     <p>To:&nbsp; 
                         <select onChange={(e)=> {
-                            this.setState({channel: this.state.channels[e.target.value]})
+                            this.setState({channel: this.state.channels[e.target.value].link})
                             console.log(`${e.target.value}: ${this.state.channel}`)
                             }}>
                             {chan}
@@ -151,35 +194,15 @@ export default class Home extends Component {
                             {workoutOptions}
                         </select>
                     </p>
+                    {workoutDetails}
+                    <span>
+                        <button className="green" onClick={()=> this.startInterval()} >Start Bot</button>
+                        <button className="red" onClick={()=> this.stopInterval()} >Stop Bot</button>
+                    </span>
                 </div>
                 <div className='column'>
-                    {/* <h4>Embed Message</h4>
-                    <span>
-                        <p>Author Name:</p>
-                        <input placeholder='Author Name...' />
-                    </span>
-                    <span>
-                        <p>Description:</p>
-                        <textarea rows="4" cols="50" placeholder="Description..."></textarea>
-                    </span>
-                    <span>
-                        <p>Image URL:</p>
-                        <input placeholder='Image URL...' />
-                    </span>
-                    <span>
-                        <p>Color:</p>
-                        <input placeholder='Color...' />
-                    </span>
-                    <textarea id="message" name="message" rows="4" cols="50" placeholder="Message..." onChange={(e) => this.handleInput('message', e.target.value)}></textarea> */}
-                    <span>
-                        <p>Send Now:</p>
-                        <button onClick={()=> this.sendMessage()}>Send</button>
-                    </span>
-                    <span>
-                        <p>Send Every Hour: </p>
-                        <button className="green" onClick={()=> this.startInterval()} >Start Interval</button>
-                        <button className="red" onClick={()=> this.stopInterval()} >Stop Interval</button>
-                    </span>
+                    <p>{this.state.instructionMessage}</p>
+                    {this.state.started ? this.state.sendingIn ? <p>Sending Message in {this.state.sendingIn} minutes</p> : <p>Calculating when the bot will send the message...</p> : null}
                 </div>
             </div>
         )
